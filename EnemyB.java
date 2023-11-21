@@ -1,11 +1,12 @@
 import java.awt.*;
 class EnemyB extends MovingObject {
     int delaytime;
+    Image img = getToolkit().getImage("img/EnemyB.png");
 
     EnemyB(int apWidth, int apHeight) {
         super(apWidth, apHeight);
-        w = 50;
-        h = 50;
+        w = 28;
+        h = 29;
         hp = 0;
         delaytime = (int)(Math.random()*300);
         
@@ -14,16 +15,22 @@ class EnemyB extends MovingObject {
     void move(Graphics buf, int apWidth, int apHeight) {
         buf.setColor(Color.pink);
         if (hp>0) {
-            buf.drawRect((int)(x) - w, (int)(y) - h, 2 * w, 2 * h);
-            buf.drawRect((int)(x) - w/2, (int)(y) - h/2, w, h);
+            buf.drawImage(img, (int)(x) - w, (int)(y) - h, this);
             x = x + dx;
             y = y + dy;
             
-            
-            if (Math.random() < 0.01) {
-                dx = (int)(Math.random()*30) - 15;
-            } else {
-                dx = dx * 0.9;
+            if (x < w) {
+                dx = 5;
+            }
+            else if (x > apWidth + w) {
+                dx = -5;
+            }
+            else {
+                if (Math.random() < 0.01) {
+                    dx = (int)(Math.random()*30) - 15;
+                } else {
+                    dx = dx * 0.9;
+                }
             }
             dy = dy * 0.9;
 
@@ -42,6 +49,7 @@ class EnemyB extends MovingObject {
         else
             this.dx = -(int)(Math.random()*30);
         hp = 4;
+        delaytime = (int)(Math.random()*300);
     }
 
 }
