@@ -1,6 +1,6 @@
-import java.awt.Graphics;
+import java.awt.*;
 
-abstract class MovingObject {
+abstract class MovingObject extends Frame {
 
     double x;
     double y;
