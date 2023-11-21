@@ -12,14 +12,17 @@ public class GameMaster extends Canvas implements KeyListener {
     private int enmyBnum = 10;
     private int ftrBltNum = 30;
     private int enmyBltNum = 40;
+    private int effectNum = 30;
     private int mode = -1;
-    private int i, j;
+    private int i, j, k;
 
+    Background bga, bgb, bgfront;
     Fighter ftr;
     FighterBullet ftrBlt[] = new FighterBullet[ftrBltNum];
     EnemyBullet enmyBlt[] = new EnemyBullet[enmyBltNum];
     EnemyA enmyA[] = new EnemyA[enmyAnum];
     EnemyB enmyB[] = new EnemyB[enmyBnum];
+    Effect effect[] = new Effect[effectNum];
 
     GameMaster(int imgW, int imgH) {
         this.imgW = imgW;
@@ -28,6 +31,9 @@ public class GameMaster extends Canvas implements KeyListener {
 
         addKeyListener(this);
 
+        bga = new Background(imgW, imgH, 8, "img/Background_01.png");
+        bgb = new Background(imgW, imgH, 11, "img/Background_02.png");
+        bgfront = new Background(imgW, imgH, 18, "img/Background_03.png");
         ftr = new Fighter(imgW, imgH);
         for (i = 0; i < ftrBltNum; i++)
             ftrBlt[i] = new FighterBullet();
@@ -37,7 +43,8 @@ public class GameMaster extends Canvas implements KeyListener {
             enmyB[i] = new EnemyB(imgW, imgH);
         for (i = 0; i < enmyBltNum; i++)
             enmyBlt[i] = new EnemyBullet();
-    
+        for (i = 0; i < effectNum; i++)
+            effect[i] = new Effect();
     }
 
     public void addNotify(){
@@ -65,14 +72,14 @@ public class GameMaster extends Canvas implements KeyListener {
             makeEnmy: if (Math.random() < 0.1) {
                 if (Math.random() < 0.7) {
                     for (i=0; i < enmyAnum; i++) {
-                        if (enmyA[i].hp == 0) {
+                        if (enmyA[i].hp <= 0) {
                             enmyA[i].revive(imgW, imgH, 0, 0);
                             break makeEnmy;
                         }
                     }
                 } else {
                     for (i=0; i < enmyBnum; i++) {
-                        if (enmyB[i].hp == 0) {
+                        if (enmyB[i].hp <= 0) {
                             enmyB[i].revive(imgW, imgH, 0, 0);
                             break makeEnmy;
                         }
@@ -112,14 +119,22 @@ public class GameMaster extends Canvas implements KeyListener {
                     ftr.collisionCheck(enmyA[i]);
                     for (j = 0; j < ftrBltNum; j++)
                         if (ftrBlt[j].hp > 0)
-                            ftrBlt[j].collisionCheck(enmyA[i]);
+                            if (ftrBlt[j].collisionCheck(enmyA[i]) == true) {
+                                for (k = 0; k < effectNum; k++) {
+                                    effect[k].revive(enmyA[i].x, enmyA[i].y, 0, 0);
+                                }
+                            }
                 }
             for (i = 0; i < enmyBnum; i++)
                 if (enmyB[i].hp > 0) {
                     ftr.collisionCheck(enmyB[i]);
                     for (j = 0; j < ftrBltNum; j++)
                         if (ftrBlt[j].hp > 0)
-                            ftrBlt[j].collisionCheck(enmyB[i]);
+                            if (ftrBlt[j].collisionCheck(enmyB[i]) == true) {
+                                for (k = 0; k < effectNum; k++) {
+                                    effect[k].revive(enmyB[i].x, enmyB[i].y, 0, 0);
+                                }
+                            }
                 }
             for (i = 0; i < enmyBltNum; i++)
                 if (enmyBlt[i].hp > 0) {
@@ -128,7 +143,9 @@ public class GameMaster extends Canvas implements KeyListener {
             
             if (ftr.hp < 1)
                 mode = -2;
-            
+
+            bga.move(buf_gc, imgW, imgH);
+            bgb.move(buf_gc, imgW, imgH);
             for (i = 0; i < enmyAnum; i++)
                 enmyA[i].move(buf_gc, imgW, imgH);
             for (i = 0; i < enmyBnum; i++)
@@ -137,7 +154,10 @@ public class GameMaster extends Canvas implements KeyListener {
                 enmyBlt[i].move(buf_gc, imgW, imgH);
             for (i = 0; i < ftrBltNum; i++)
                 ftrBlt[i].move(buf_gc, imgW, imgH);
+            for (i = 0; i < effectNum; i++)
+                effect[i].move(buf_gc, imgW, imgH);
             ftr.move(buf_gc, imgW, imgH);
+            bgfront.move(buf_gc, imgW, imgH);
 
             for (i = 0; i < enmyAnum; i++) {
                 System.out.print(enmyA[i].hp + " ");
