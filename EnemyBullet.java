@@ -12,7 +12,7 @@ class EnemyBullet extends MovingObject {
     /** メソッド **/
     void move(Graphics buf, int apWidth, int apHeight) {
         if (hp>0) {
-            buf.setColor(Color.red);
+            buf.setColor(Color.white);
             buf.fillOval((int)(x)-w, (int)(y)-h, 2*w, 2*h);
             if (y > 0 && y < apHeight && x > 0 && x < apWidth) {
                 x = x + dx;
