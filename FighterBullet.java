@@ -1,20 +1,21 @@
 import java.awt.*;
 class FighterBullet extends MovingObject {
-
+    Image img = getToolkit().getImage("img/FighterBullet.png");
     /** コンストラクタ **/
     FighterBullet() {
-        w = h = 3;
+        w = 3;
+        h = 14;
 
         double a = Math.random() * 0.20 - 0.10 + (Math.PI * 3 / 2);
-        dx = 8 * Math.cos(a); dy = 8 * Math.sin(a);
+        dx = 11 * Math.cos(a); dy = 11 * Math.sin(a);
         hp = 0;
     }
 
     /** メソッド **/
     void move(Graphics buf, int apWidth, int apHeight) {
         if (hp>0) {
-            buf.setColor(Color.white);
-            buf.fillOval((int)(x)-w, (int)(y)-h, 2*w, 2*h);
+            buf.drawImage(img, (int)(x) - 2, (int)(y) - h, this);
+
             if (y > 0 && y < apHeight && x > 0 && x < apWidth) {
                 x = x + dx;
                 y = y + dy;
