@@ -1,11 +1,12 @@
 import java.awt.*;
 class EnemyA extends MovingObject {
     int delaytime;
+    Image img = getToolkit().getImage("img/EnemyA.png");
 
     EnemyA(int apWidth, int apHeight) {
         super(apWidth, apHeight);
-        w = 10;
-        h = 10;
+        w = 12;
+        h = 14;
         hp = 0;
         delaytime = (int)(Math.random()*500);
         
@@ -14,7 +15,7 @@ class EnemyA extends MovingObject {
     void move(Graphics buf, int apWidth, int apHeight) {
         buf.setColor(Color.yellow);
         if (hp>0) {
-            buf.drawOval((int)(x) - w, (int)(y) - h, 2 * w, 2 * h);
+            buf.drawImage(img, (int)(x) - w, (int)(y) - h, this);
             x = x + dx;
             y = y + dy;
             if (y>apHeight+h)
@@ -25,7 +26,7 @@ class EnemyA extends MovingObject {
     void revive(double apWidth, double apHeight, double dx, double dy) {
         x = (int)(Math.random()*(apWidth-2*w)+w);
         y = -h;
-        this.dy = 1;
+        this.dy = 3;
         if (x<apWidth/2)
             this.dx = (int)(Math.random()*2);
         else
